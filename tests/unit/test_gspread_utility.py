@@ -1,4 +1,5 @@
 # pylint: disable=import-error
+# pylint: disable=unused-import
 import pytest
 import sys
 import os
