@@ -2,7 +2,6 @@
 from pathlib import Path
 from google.oauth2 import service_account
 from gspread_dataframe import set_with_dataframe
-from decouple import config
 from exceptions import (
     DataPopulationError,
     NewSheetError,
@@ -14,7 +13,7 @@ import gspread
 import pandas as pd
 import logging
 import subprocess
-
+import os
 
 # logging config
 logging.basicConfig(
