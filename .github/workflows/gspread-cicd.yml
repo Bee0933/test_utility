@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  BASH_SCRIPT_NAME: ${{ secrets.BASH_SCRIPT_NAME }}
+
 jobs:
   build:
 
