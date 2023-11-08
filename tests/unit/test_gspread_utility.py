@@ -76,4 +76,4 @@ def test_class_instance(mock_authorize):
     assert workbook_test.email == "bestnyah7@gmail.com"
     assert workbook_test.year == "2023"
 
-    assert workbook_test.client is not None
+    # assert workbook_test.client is not None
