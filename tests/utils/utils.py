@@ -1,10 +1,9 @@
 import os
 import subprocess
-from decouple import config
 from typing import List
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-EXTRACT_SH_PATH = os.path.join(BASE_PATH, config("BASH_SCRIPT_NAME"))
+EXTRACT_SH_PATH = os.path.join(BASE_PATH, os.environ["BASH_SCRIPT_NAME"])
 
 
 def subprocess_run(argument: List[str]) -> str:

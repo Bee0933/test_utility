@@ -23,8 +23,8 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()],
 )
 
-CREDENTIALS_PATH = config("CREDENTIALS_PATH")
-BASH_SCRIPT_PATH = config("BASH_SCRIPT_PATH")
+CREDENTIALS_PATH = os.environ["CREDENTIALS_PATH"]
+BASH_SCRIPT_PATH = os.environ["BASH_SCRIPT_PATH"]
 
 
 class Workbook:
