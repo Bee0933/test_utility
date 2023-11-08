@@ -1,3 +1,4 @@
+# pylint: disable=import-error
 import pytest
 import os
 from main import Workbook
@@ -5,7 +6,6 @@ import subprocess
 from unittest.mock import patch, Mock
 from decouple import config
 from ..utils.utils import subprocess_run
-
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 EXTRACT_SH_PATH = os.path.join(BASE_PATH, config("BASH_SCRIPT_NAME"))
@@ -23,6 +23,7 @@ def test_bash_arguments() -> None:
 
     # test for bad argument
     with pytest.raises(subprocess.CalledProcessError):
+        # pylint: disable=implicit-str-concat
         bad_argument = ["2023", "2", "3"]
         result = subprocess_run(bad_argument)
 
@@ -36,6 +37,7 @@ def test_bash_download(mock_run):
     """
 
     # define mock result
+    # pylint: disable=implicit-str-concat
     arguments = ["extract.sh" "2023", "2"]
     # define mock return value
     mock_return_value = subprocess.CompletedProcess(
@@ -56,6 +58,7 @@ def test_bash_download(mock_run):
     assert "./data/ny_taxi_data_2.parquet" in result.stdout
 
 
+# pylint: disable=unused-argument
 @patch("main.gspread.authorize", return_value=Mock())
 def test_class_instance(mock_authorize):
     """_summary_

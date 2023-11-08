@@ -26,7 +26,11 @@ test:
 	# run unit and integration tests
 	pytest -s ./tests/unit/test_gspread_utility.py	
 
+deploy:
+	# deploy code to cloud
+
 
 all: 
 	# run in required order
 	install format lint test populate 
+
