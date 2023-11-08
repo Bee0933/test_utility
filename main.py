@@ -1,5 +1,6 @@
 # pylint: disable=import-error
 from pathlib import Path
+from dotenv import load_dotenv
 from google.oauth2 import service_account
 from gspread_dataframe import set_with_dataframe
 from exceptions import (
@@ -15,6 +16,9 @@ import logging
 import subprocess
 import os
 
+# load env variables from .env file
+load_dotenv()
+
 # logging config
 logging.basicConfig(
     level=logging.INFO,
@@ -22,8 +26,8 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()],
 )
 
-CREDENTIALS_PATH = os.environ["CREDENTIALS_PATH"]
-BASH_SCRIPT_PATH = os.environ["BASH_SCRIPT_PATH"]
+CREDENTIALS_PATH = os.environ.get("CREDENTIALS_PATH")
+BASH_SCRIPT_PATH = os.environ.get("BASH_SCRIPT_PATH")
 
 
 class Workbook:
@@ -43,22 +47,25 @@ class Workbook:
         self.processed_data = None
         self.file_path = None
         self.df = None
+        self.creds = None
+        self.client = None
 
         # connection parameters
-        scope = [
+        self.scope = [
             "https://spreadsheets.google.com/feeds",
             "https://www.googleapis.com/auth/spreadsheets",
             "https://www.googleapis.com/auth/drive.file",
             "https://www.googleapis.com/auth/drive",
         ]
 
+    def connect_to_api(self) -> None:
         try:
             # google cloud platform API credentials
-            creds = service_account.Credentials.from_service_account_file(
-                CREDENTIALS_PATH, scopes=scope
+            self.creds = service_account.Credentials.from_service_account_file(
+                CREDENTIALS_PATH, scopes=self.scope
             )
             # create API client
-            self.client = gspread.authorize(creds)
+            self.client = gspread.authorize(self.creds)
 
             logging.info("Connected to Google Sheets successfully.")
         except Exception as e:
@@ -193,6 +200,7 @@ def main(
     spread_sheet: str, worksheet_name: str, email: str, year: str, month: str
 ) -> None:
     wb = Workbook(spread_sheet, worksheet_name, email, year, month)
+    wb.connect_to_api()
     wb.create_new_spreadsheet()
     wb.download_data()
     wb.create_new_sheet()

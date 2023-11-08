@@ -1,9 +1,13 @@
 import os
 import subprocess
 from typing import List
+from dotenv import load_dotenv
+
+# load env variables from .env file
+load_dotenv()
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-EXTRACT_SH_PATH = os.path.join(BASE_PATH, os.environ["BASH_SCRIPT_NAME"])
+EXTRACT_SH_PATH = os.path.join(BASE_PATH, os.environ.get("BASH_SCRIPT_NAME"))
 
 
 def subprocess_run(argument: List[str]) -> str:

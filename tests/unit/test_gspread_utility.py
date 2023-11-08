@@ -1,5 +1,6 @@
 # pylint: disable=import-error
 # pylint: disable=unused-import
+from dotenv import load_dotenv
 import pytest
 import sys
 import os
@@ -12,9 +13,9 @@ EXTRACT_SH_PATH = os.path.join(BASE_PATH, os.environ["BASH_SCRIPT_NAME"])
 sys.path.insert(0, BASE_PATH)
 from main import Workbook
 
+# load env variables from .env file
+load_dotenv()
 
-
-print(BASE_PATH)
 
 def test_bash_arguments() -> None:
     """_summary_
@@ -64,15 +65,15 @@ def test_bash_download(mock_run):
 
 
 # pylint: disable=unused-argument
-# @patch("main.gspread.authorize", return_value=Mock())
-# def test_class_instance(mock_authorize):
-#     """_summary_
-#     - Test data validation
-#     - Mock test client connection
-#     """
-#     # test input data instantiation
-#     workbook_test = Workbook("test_wb", "test_sh", "bestnyah7@gmail.com", "2023", "2")
-#     assert workbook_test.email == "bestnyah7@gmail.com"
-#     assert workbook_test.year == "2023"
+@patch("main.gspread.authorize", return_value=Mock())
+def test_class_instance(mock_authorize):
+    """_summary_
+    - Test data validation
+    - Mock test client connection
+    """
+    # test input data instantiation
+    workbook_test = Workbook("test_wb", "test_sh", "bestnyah7@gmail.com", "2023", "2")
+    assert workbook_test.email == "bestnyah7@gmail.com"
+    assert workbook_test.year == "2023"
 
-#     assert workbook_test.client is not None
+    assert workbook_test.client is not None
