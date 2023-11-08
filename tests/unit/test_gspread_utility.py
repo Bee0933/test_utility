@@ -4,7 +4,6 @@ import sys
 import os
 import subprocess
 from unittest.mock import patch, Mock
-from decouple import config
 from ..utils.utils import subprocess_run
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
