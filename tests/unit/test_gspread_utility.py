@@ -8,7 +8,7 @@ from decouple import config
 from ..utils.utils import subprocess_run
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-EXTRACT_SH_PATH = os.path.join(BASE_PATH, config("BASH_SCRIPT_NAME"))
+EXTRACT_SH_PATH = os.path.join(BASE_PATH, os.environ["BASH_SCRIPT_NAME"])
 sys.path.insert(0, BASE_PATH)
 from main import Workbook
 
