@@ -1,17 +1,19 @@
 # pylint: disable=import-error
 # pylint: disable=unused-import
+# pylint: disable=redefined-outer-name
+# pylint: disable=broad-exception-caught
 from dotenv import load_dotenv
 import pytest
 import sys
 import os
 import subprocess
 from unittest.mock import patch, Mock
-from ..utils.utils import subprocess_run
+from ..utils.utils import subprocess_run, workbook_instance
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 EXTRACT_SH_PATH = os.path.join(BASE_PATH, os.environ["BASH_SCRIPT_NAME"])
 sys.path.insert(0, BASE_PATH)
-from main import Workbook
+from exceptions import DownloadDataError, APIConnectionError
 
 # load env variables from .env file
 load_dotenv()
@@ -65,15 +67,73 @@ def test_bash_download(mock_run):
 
 
 # pylint: disable=unused-argument
-@patch("main.gspread.authorize", return_value=Mock())
-def test_class_instance(mock_authorize):
+@patch("main.gspread.authorize")
+def test_class_instance(mock_authorize, workbook_instance):
     """_summary_
     - Test data validation
     - Mock test client connection
     """
-    # test input data instantiation
-    workbook_test = Workbook("test_wb", "test_sh", "bestnyah7@gmail.com", "2023", "2")
-    assert workbook_test.email == "bestnyah7@gmail.com"
-    assert workbook_test.year == "2023"
+    mock_authorize.return_value = Mock()
 
-    # assert workbook_test.client is not None
+    # test input data instantiation
+    assert workbook_instance.email == "bestnyah7@gmail.com"
+    assert workbook_instance.year == "2023"
+
+    # initiate client
+    workbook_instance.connect_to_api()
+
+    assert workbook_instance.client is not None
+
+
+# test connect to API failure
+@patch("main.service_account.Credentials.from_service_account_file")
+def test_connect_to_api_failure(mock_service_account, workbook_instance):
+    mock_service_account.side_effect = Exception("Fake error")
+
+    with pytest.raises(APIConnectionError):
+        workbook_instance.connect_to_api()
+
+
+# test download data success
+@patch(
+    "main.Workbook._run_bash_process",
+    return_value="/fake_path/data/ny_taxi_data_2.parquet",
+)
+def test_download_data_success(mock_run_bash_process, workbook_instance):
+    try:
+        workbook_instance.download_data()
+        assert True
+    except Exception as e:
+        pytest.fail(f"Unexpected exception: {e}")
+
+    mock_run_bash_process.assert_called_once()
+    assert workbook_instance.file_path == "/fake_path/data/ny_taxi_data_2.parquet"
+
+
+# test download data method failure
+@patch("main.Workbook._run_bash_process")
+def test_download_data_failure(mock_download_data, workbook_instance):
+    mock_download_data.side_effect = Exception("Fake error")
+
+    with pytest.raises(DownloadDataError):
+        workbook_instance.download_data()
+
+
+# test creation of new spredsheet
+@patch("main.gspread.authorize")
+def test_create_new_spreadsheet_success(mock_authorize, workbook_instance):
+    mock_client = Mock()
+    mock_spreadsheet = Mock()
+
+    mock_client.create.return_value = mock_spreadsheet
+    mock_authorize.return_value = mock_client
+
+    try:
+        workbook_instance.connect_to_api()
+        workbook_instance.create_new_spreadsheet()
+        assert True
+    except Exception as e:
+        pytest.fail(f"Unexpected exception: {e}")
+
+    mock_authorize.assert_called_once()
+    assert workbook_instance.sh is not None

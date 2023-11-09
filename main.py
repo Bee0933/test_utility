@@ -9,6 +9,7 @@ from exceptions import (
     NewSpreadsheetError,
     DownloadDataError,
     PreprocessError,
+    APIConnectionError,
 )
 import gspread
 import pandas as pd
@@ -69,7 +70,7 @@ class Workbook:
 
             logging.info("Connected to Google Sheets successfully.")
         except Exception as e:
-            raise NewSpreadsheetError("Could not connect to Google Sheets") from e
+            raise APIConnectionError("Could not connect to Google Sheets") from e
 
     def _run_bash_process(self) -> Path:
         """_summary_

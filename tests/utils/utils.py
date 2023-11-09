@@ -1,7 +1,9 @@
 import os
 import subprocess
+import pytest
 from typing import List
 from dotenv import load_dotenv
+from main import Workbook
 
 # load env variables from .env file
 load_dotenv()
@@ -28,3 +30,9 @@ def subprocess_run(argument: List[str]) -> str:
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
+
+
+# pytest fixture for class instantiation
+@pytest.fixture
+def workbook_instance():
+    return Workbook("test_wb", "test_sh", "bestnyah7@gmail.com", "2023", "2")

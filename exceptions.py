@@ -3,6 +3,10 @@ class DataPopulationError(Exception):
     pass
 
 
+class APIConnectionError(Exception):
+    pass
+
+
 class NewSheetError(Exception):
     pass
 
