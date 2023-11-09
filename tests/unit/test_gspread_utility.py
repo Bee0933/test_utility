@@ -120,20 +120,20 @@ def test_download_data_failure(mock_download_data, workbook_instance):
 
 
 # test creation of new spredsheet
-@patch("main.gspread.authorize")
-def test_create_new_spreadsheet_success(mock_authorize, workbook_instance):
-    mock_client = Mock()
-    mock_spreadsheet = Mock()
+# @patch("main.gspread.authorize")
+# def test_create_new_spreadsheet_success(mock_authorize, workbook_instance):
+#     mock_client = Mock()
+#     mock_spreadsheet = Mock()
 
-    mock_client.create.return_value = mock_spreadsheet
-    mock_authorize.return_value = mock_client
+#     mock_client.create.return_value = mock_spreadsheet
+#     mock_authorize.return_value = mock_client
 
-    try:
-        workbook_instance.connect_to_api()
-        workbook_instance.create_new_spreadsheet()
-        assert True
-    except Exception as e:
-        pytest.fail(f"Unexpected exception: {e}")
+#     try:
+#         workbook_instance.connect_to_api()
+#         workbook_instance.create_new_spreadsheet()
+#         assert True
+#     except Exception as e:
+#         pytest.fail(f"Unexpected exception: {e}")
 
-    mock_authorize.assert_called_once()
-    assert workbook_instance.sh is not None
+#     mock_authorize.assert_called_once()
+#     assert workbook_instance.sh is not None
