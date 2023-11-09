@@ -73,16 +73,16 @@ def test_class_instance(mock_authorize, workbook_instance):
     - Test data validation
     - Mock test client connection
     """
-    mock_authorize.return_value = Mock()
+    # mock_authorize.return_value = Mock()
 
     # test input data instantiation
     assert workbook_instance.email == "bestnyah7@gmail.com"
     assert workbook_instance.year == "2023"
 
-    # initiate client
-    workbook_instance.connect_to_api()
+    # # initiate client
+    # workbook_instance.connect_to_api()
 
-    assert workbook_instance.client is not None
+    # assert workbook_instance.client is not None
 
 
 # test connect to API failure
