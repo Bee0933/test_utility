@@ -1,16 +1,17 @@
 import os
+import sys
 import subprocess
 import pytest
 from typing import List
 from dotenv import load_dotenv
-from main import Workbook
 
 # load env variables from .env file
 load_dotenv()
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 EXTRACT_SH_PATH = os.path.join(BASE_PATH, os.environ.get("BASH_SCRIPT_NAME"))
-
+sys.path.insert(0, BASE_PATH)
+from main import Workbook
 
 def subprocess_run(argument: List[str]) -> str:
     """_summary_
